@@ -36,6 +36,14 @@ func (r *Router) Handle(method, path string, handler http.Handler) {
 	r.root.insert(method, parts, handler)
 }
 
+// Use 添加全局中间件到路由器。
+func (r *Router) Use(middleware Middleware) {
+	r.lock.Lock()
+	defer r.lock.Unlock()
+	// 添加中间件到中间件列表
+	r.middlewares = append(r.middlewares, middleware)
+}
+
 // ServeHTTP 实现http.Handler接口，用于接收和处理所有HTTP请求。
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	handler, params := r.root.search(req.Method, req.URL.Path)
