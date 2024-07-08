@@ -9,9 +9,9 @@ import (
 
 // 定义支持的运行模式
 const (
-	DebugMode   = "debug"
-	TestMode    = "test"
-	ReleaseMode = "release"
+	Debug   = "debug"
+	Test    = "test"
+	Release = "release"
 )
 
 // Engine 结构体现在包含运行模式。
@@ -25,7 +25,7 @@ func Default() *Engine {
 	router := route.NewRouter()
 	engine := &Engine{
 		router: router,
-		mode:   DebugMode, // 默认为 Debug 模式
+		mode:   Debug, // 默认为 Debug 模式
 	}
 	// 添加日志和错误恢复中间件
 	engine.Use(route.LoggingMiddleware)
@@ -41,7 +41,7 @@ func (e *Engine) SetMode(mode string) {
 // Use 添加中间件到路由器。
 func (e *Engine) Use(middleware route.Middleware) {
 	// 根据模式调整日志中间件的行为
-	if e.mode == DebugMode {
+	if e.mode == Debug {
 		log.Println("Adding middleware in debug mode")
 	}
 	e.router.Use(middleware)
@@ -49,7 +49,7 @@ func (e *Engine) Use(middleware route.Middleware) {
 
 // Run 启动HTTP服务器。
 func (e *Engine) Run(addr string) error {
-	if e.mode == DebugMode {
+	if e.mode == Debug {
 		log.Printf("Debug mode is enabled")
 	}
 	fmt.Printf("Listening and serving HTTP on %s\n", addr)
