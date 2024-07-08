@@ -1,34 +1,8 @@
 package route
 
-import (
-	"net/http"
-	"strings"
-)
-
-type Route struct {
-	Pattern string
-	Method  string
-	Handler http.HandlerFunc
-}
-
-type Router struct {
-	routes []Route
-}
-
+// NewRouter 创建并返回一个新的Router实例。
 func NewRouter() *Router {
-	return &Router{}
-}
-
-func (r *Router) AddRoute(pattern, method string, handler http.HandlerFunc) {
-	r.routes = append(r.routes, Route{pattern, method, handler})
-}
-
-func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	for _, route := range r.routes {
-		if strings.EqualFold(route.Pattern, req.URL.Path) && strings.EqualFold(route.Method, req.Method) {
-			route.Handler(w, req)
-			return
-		}
+	return &Router{
+		root: NewNode(),
 	}
-	http.NotFound(w, req)
 }
